@@ -26,19 +26,26 @@ async function start() {
     document.body.append(container)
     const labelFaceDescriptors = await loadLabeledImages()
     const faceMatcher = new faceapi.FaceMatcher(labelFaceDescriptors, .5)
-
+    let image
+    let canvas
     // 获取文档主体
     console.log('加载完成后');
     // 配置文件加载完成后的显示
     document.body.append('loaded');
     // 监听图片文件的改变
     imageUpload.addEventListener('change', async () => {
+        if (image) {
+            image.remove()
+        }
+        if (canvas) {
+            canvas.remove()
+        }
         // faceapi.bufferToImage(buffer) 方法会将这个 ArrayBuffer 对象转换成一个 HTMLImageElement 对象，存储在 image 变量中，你可以在后续的代码中使用这个 image 对象进行处理。
         // 本质上将这个图片或者视频转换成了实际的dom元素
-        const image = await faceapi.bufferToImage(imageUpload.files[0])
+        image = await faceapi.bufferToImage(imageUpload.files[0])
         container.append(image)
         // 
-        const canvas = faceapi.createCanvasFromMedia(image)
+        canvas = faceapi.createCanvasFromMedia(image)
         container.append(canvas)
         const displaySize = { width: image.width, height: image.height }
         faceapi.matchDimensions(canvas, displaySize)
@@ -70,7 +77,7 @@ async function start() {
 
 
 function loadLabeledImages() {
-    const labels = ['明安瑞']
+    const labels = ['明安瑞', '文慧', '夏雨荷', '慌慌', '郭增印']
     return Promise.all(
         labels.map(async label => {
             const descriptions = []
