@@ -1,0 +1,42 @@
+<!--
+ * @Author: imc-明安瑞
+ * @LastEditors: imc-Mar
+ * @Description: 有问题请联系我 tel:13562850362
+ * 一川烟草，满城风絮，梅子黄时雨。
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>面部识别</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+    <script defer src="./face-api.js"></script>
+    <!-- defer 属性表示脚本的加载和执行将在文档解析完成后进行。这意味着在整个 HTML 文档解析完毕之后，浏览器会开始加载 face-api.js 文件，并且在加载完成后立即执行它。 -->
+    <script defer src="./script.js"></script>
+</head>
+
+<body>
+    <input type="file" id="imageUpload">
+</body>
+
+</html>
