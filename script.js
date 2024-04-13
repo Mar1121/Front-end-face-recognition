@@ -18,12 +18,14 @@ Promise.all([
 ]).then(start)
 
 
-function start() {
+async function start() {
 
     // 覆盖在人脸面部的容器
     const container = document.createElement('div')
     container.style.position = 'relative'
     document.body.append(container)
+    const labelFaceDescriptors = await loadLabeledImages()
+    const faceMatcher = new faceapi.FaceMatcher(labelFaceDescriptors, .5)
 
     // 获取文档主体
     console.log('加载完成后');
@@ -52,9 +54,13 @@ function start() {
         // 根据我们传递的尺寸将我们检测的所有框调整为正确的尺寸
         const resizedDetections = faceapi.resizeResults(detections, displaySize)
 
-        resizedDetections.forEach(detections => {
-            const box = detections.detection.box
-            const drawBox = new faceapi.draw.DrawBox(box, { label: 'Face' })
+        const results = resizedDetections.map(d => faceMatcher.findBestMatch(d.descriptor))
+        // console.log('results--', results);
+
+        results.forEach((result, i) => {
+            const box = resizedDetections[i].detection.box
+            const drawBox = new faceapi.draw.DrawBox(box, { label: result.toString() })
+            console.log(results);
             drawBox.draw(canvas)
         })
 
@@ -67,9 +73,15 @@ function loadLabeledImages() {
     const labels = ['明安瑞']
     return Promise.all(
         labels.map(async label => {
+            const descriptions = []
             for (let i = 1; i <= 2; i++) {
-                const img = await faceapi.fetchImage(``)
+                const img = await faceapi.fetchImage(`http://127.0.0.1:5500/labeled_images/${label}/${i}.jpg`)
+                // console.log('img--', img);
+                const detections = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
+                // console.log('detections--', detections);
+                descriptions.push(detections.descriptor)
             }
+            return new faceapi.LabeledFaceDescriptors(label, descriptions)
         })
     )
 }
