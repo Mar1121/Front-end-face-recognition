@@ -10,3 +10,6 @@ face-api.js
 
 https://github.com/justadudewhohacks/face-api.js
 
+本地启动
+
+vscode上安装拓展live Server 右键index.html 用live Server打开 script的图片文件夹的端口号改成你的port
